@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+// .t-btn{
+//     @apply px-4 
+//     @apply py-2
+//     @apply border-2
+//     @apply rounded-md
+//     @apply border-blue-600
+//     @apply hover:bg-blue-600
+//     @apply hover:text-white
+// }
+@import "tailwindcss/utilities";
+
+@layer components {
+  .t-btn {
+    @apply px-4 py-1 border-2 rounded-md border-blue-600 hover:bg-blue-600 hover:text-white;
+  }
+}

@@ -1,0 +1,68 @@
+<div class="live-container flex h-screen w-screen">
+    <div class="left p-2 h-full border-r border-blue-600">
+        <div class="main text-center pb-4 border-b border-blue-600">
+            <div class="video-box w-full bg-black relative">
+                <span class="absolute top-0 left-0 px-4 py-1 rounded bg-blue-400 text-white">{{currentUser?.username}}</span>
+                <video [srcObject]="localStream" autoplay></video>
+                <div class="video-action hidden absolute top-1/2 left-0 right-0 bottom-0 m-auto">
+                    <!-- <div class="v-action mr-2 inline-block p-2 cursor-pointer rounded-lg" (click)="switchMedia('video')">
+                        <img *ngIf="mediaConstraintsa?.video" class="w-full h-full" src="/assets/images/v-close.png" alt="">
+                        <img *ngIf="!mediaConstraintsa?.video" class="w-full h-full" [ngClass]="{'cursor-not-allowed': !mediaConstraintsa?.audio}" src="/assets/images/v-open.png" alt="">
+                    </div> -->
+                    <!-- <div class="p-action inline-block p-2 cursor-pointer rounded-lg"
+                        (click)="switchMedia('audio')">
+                        <img *ngIf="mediaConstraintsa?.audio" class="w-full h-full" src="/assets/images/phone-close.png" alt="">
+                        <img *ngIf="!mediaConstraintsa?.audio" class="w-full h-full" [ngClass]="{'cursor-not-allowed': !mediaConstraintsa?.video}" src="/assets/images/phone-open.png" alt="">
+                    </div> -->
+                </div>
+            </div>
+            <!-- <span>我的用户名: {{currentUser?.username}}</span> -->
+        </div>
+        <div class="user-list">
+            <p class="mt-5 text-blue-500" *ngFor="let item of userList">{{item.username}}</p>
+        </div>
+    </div>
+    <div class="right flex flex-col flex-1">
+        <div class="top p-2 border-b border-blue-600">
+            <button class="mr-2 t-btn" *ngIf="vType==='camera'" (click)="shareScreen()">屏幕共享</button>
+            <button class="mr-2 t-btn" *ngIf="vType==='display'" (click)="openCam()">启用摄像头</button>
+            <button class="mr-2 t-btn" *ngIf="!isMute" (click)="switchMute()">静音</button>
+            <button class="mr-2 t-btn" *ngIf="isMute" (click)="switchMute()">取消静音</button>
+            <!-- <button class="mr-2 t-btn" (click)="switchMedia('video')">关闭摄像头</button> -->
+            <!-- <button class="t-btn">
+                <img *ngIf="mediaConstraintsa?.video" class="icon w-full h-full" src="/assets/images/v-close.png" alt="">
+                <img *ngIf="!mediaConstraintsa?.video" class="icon w-full h-full"
+                    [ngClass]="{'cursor-not-allowed': !mediaConstraintsa?.audio}" src="/assets/images/v-open.png" alt="">
+            </button> -->
+            <button class="mr-2 t-btn" (click)="joinMeeting()" *ngIf="!isMeeting">加入视频聊天</button>
+            <button class="mr-2 t-btn" (click)="leave()" *ngIf="isMeeting">退出视频聊天</button>
+            <button class="t-btn float-right" [routerLink]="['/login']" routerLinkActive="router-link-active" >离开房间</button>
+        </div>
+        <div class="bottom flex flex-1">
+            <div class="flex-1">
+                <div class="relative inline-block" *ngFor="let user of userList">
+                    <div *ngIf="user.stream" class="user-video border inline-block">
+                        <span class="absolute top-0 left-0 px-4 py-1 rounded bg-blue-400 text-white">{{user.username}}</span>
+                        <!-- <span class="absolute right-0 bottom-0 px-4 py-1 rounded bg-blue-400 text-white cursor-pointer" (click)="fullScreen(video)">全屏</span> -->
+                        <video [srcObject]="user.stream" autoplay controls #video></video>
+                    </div>
+                </div>
+            </div>
+            <div class="right flex flex-col border-l border-blue-600 relative">
+                <div class="talk-content flex-1 p-2 message-box w-full absolute top-0 overflow-y-auto" #messageBox>
+                    <div *ngFor="let item of msgList" class="mb-2" [ngClass]="{'text-right': item.from===currentUser?.username}">
+                        <p class="mb-1">
+                            <span class="text-blue-600 mr-1">{{item.from}}</span>
+                            <span class="text-gray-300 text-sm">{{item.time | date:'yyyy-MM-dd HH:mm'}}</span>
+                        <p>
+                        <p class="text-gray-600">{{item.msg}}</p>
+                    </div>
+                </div>
+                <div class="talk-input flex items-end p-2 border-t border-blue-600 w-full absolute bottom-0">
+                    <textarea class="w-full border-2 border-blue-600 py-1 px-2 rounded" style="resize:none;" name="" id="" placeholder="请输入" [(ngModel)]="textMsg"></textarea>
+                    <button class="ml-2 t-btn" *ngIf="textMsg" (click)="sendMsg(textMsg)">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

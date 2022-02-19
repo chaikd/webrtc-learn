@@ -1,0 +1,57 @@
+.left{
+    width: 200px;
+}
+.user-video{
+    width: 300px;
+}
+.v-action,
+.p-action{
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255,255,255, .3)
+}
+.video-box{
+    &:hover{
+        .video-action{
+            display:block;
+            transform: translateY(-50%);
+        }
+    }
+}
+.icon{
+    width: 16px;
+    height: 16px;
+}
+.bottom{
+    .right {
+        width: 300px;
+    }
+}
+
+.talk-input{
+    height: 90px;
+    font-size: 0;
+    textarea,
+    button{
+        font-size: 16px;
+    }
+    button{
+        width: 90px;
+    }
+}
+
+textarea{
+    outline:none;
+}
+
+.message-box{
+    bottom: 90px;
+    &::-webkit-scrollbar {
+        height: 6px;
+        width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #6e6e6e;
+        outline: 1px solid #444;
+    }
+}

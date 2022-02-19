@@ -1,0 +1,24 @@
+<div class="home absolute top-10 left-10 cursor-pointer text-white text-2xl" [routerLink]="['/']" routerLinkActive="router-link-active">Home</div>
+<div class="box h-screen w-screen bg-cover">
+    <div class="login-box text-center absolute m-auto top-0 left-0 right-0 bottom-0 rounded-lg">
+        <p class="text-xl mb-5 mt-5">登录</p>
+        <div class="mb-5">
+            <span>用户名：</span>
+            <input type="text" class="p-1 rounded border-2 border-blue-600" placeholder="请输入用户名" [(ngModel)]="userName" required #name="ngModel">
+            <div class="text-red-500" *ngIf="(name.dirty || name.touched || errorInput)&&name.errors?.['required']">
+                用户名必填
+            </div>
+        </div>
+        <div class="mb-5">
+            <span>房间号：</span>
+            <input type="text" class="p-1 rounded border-2 border-blue-600" placeholder="请输入房间号" [(ngModel)]="roomId" required #room="ngModel">
+            <div class="text-red-500" *ngIf="(name.dirty || name.touched || errorInput)&&room.errors?.['required']">
+                房间号必填
+            </div>
+        </div>
+        <div>
+            <!-- <button class="mr-2 t-btn" (click)="joinLive()">进入直播</button> -->
+            <button class="t-btn" (click)="joinMeeting()">进入会议</button>
+        </div>
+    </div>
+</div>

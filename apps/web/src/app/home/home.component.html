@@ -1,0 +1,13 @@
+<div class="home w-screen h-screen relative">
+    <div class="shadow absolute top-0 left-0 right-0 bottom-0 z-10">
+    </div>
+    <img class="img absolute top-1/2" src="/assets/images/bg-main.jpeg" alt="">
+    <div class="content absolute left-9 my-auto z-20">
+        <p class="text-white font-semibold text-6xl">录屏和视频会议功能</p>
+        <p class="text-white mt-2">需同意开启浏览器多媒体权限</p>
+        <div class="mt-10">
+            <button class="mr-5 align-center bg-white text-blue-600 rounded-lg" [routerLink]="['/record']" routerLinkActive="router-link-active" >视频录制</button>
+            <button class="align-center bg-white text-blue-600 rounded-lg" [routerLink]="['/login']" routerLinkActive="router-link-active" >视频会议</button>
+        </div>
+    </div>
+</div>

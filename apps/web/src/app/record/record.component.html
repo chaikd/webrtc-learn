@@ -1,0 +1,29 @@
+<div class="home absolute top-10 left-10 cursor-pointer text-white text-2xl" [routerLink]="['/']" routerLinkActive="router-link-active" >Home</div>
+<div class="bg-blue-500 w-screen h-screen flex justify-around items-center">
+    <div *ngIf="isRecording!=='over'" class="record-box relative">
+        <video class="w-full bg-black" #video [srcObject]="localStream" autoplay></video>
+        <div class="bottom-action absolute bottom-0 w-full flex justify-around items-center">
+            <div *ngIf="isRecording==='inactive'" class="start p-1 cursor-pointer border-2 border-gray-500 hover:rounded-full" (click)="recordStart()">
+                <div class="inner h-full w-full rounded-1/2 bg-red-600"></div>
+            </div>
+            <div *ngIf="isRecording==='recording'" class="stop p-1 cursor-pointer border-2 border-gray-500 rounded-lg" (click)="recordStop()">
+                <div class="inner h-full w-full rounded-sm bg-red-600"></div>
+            </div>
+            <div *ngIf="isRecording==='inactive'">
+                <button class="t-btn" *ngIf="streamType==='screen'"(click)="getStream('camera')">设置为摄像头录制</button>
+                <button class="t-btn" *ngIf="streamType==='camera'" (click)="getStream('screen')">设置为屏幕录制</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isRecording==='over'" class="record-box player-box relative">
+        <video class="w-full" #player [src]="localStream" (play)="onPlay()" (pause)="onPause()" (ended)="onPause()"></video>
+        <div class="bottom-action absolute bottom-0 w-full flex justify-around items-center">
+            <button class="t-btn mr-2" (click)="reRecord()">重新录制</button>
+            <div class="play-btn p-1 bg-white rounded-full cursor-pointer">
+                <img *ngIf="!playing" class="w-full h-full" src="/assets/images/play.png" alt="" (click)="play()">
+                <img *ngIf="playing" class="w-full h-full" src="/assets/images/pause.png" alt="" (click)="playStop()">
+            </div>
+            <button class="t-btn" [ngClass]="{'bg-gray-500': downloading}" (click)="download()">下载</button>
+        </div>
+    </div>
+</div>

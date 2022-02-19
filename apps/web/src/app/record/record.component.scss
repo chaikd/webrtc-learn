@@ -1,0 +1,31 @@
+.record-box{
+    width: 70%;
+    max-width: 700px;
+    // min-height: 480px;
+}
+.bottom-action{
+    height: 50px;
+    background: rgba(255,255,255,.5);
+    .start,
+    .stop{
+        width: 30px;
+        height: 30px;
+    }
+    .start:hover{
+        .inner{
+            border-radius: 50%;
+            background-color: red;
+        }
+    }
+}
+.record-box{
+    &:hover{
+        .top-action{
+            display: flex;
+        }
+    }
+}
+.play-btn{
+    width: 40px;
+    height: 40px;
+}
