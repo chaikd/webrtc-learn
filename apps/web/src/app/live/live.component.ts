@@ -61,6 +61,7 @@ export class LiveComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.leave()
     this.ws.disconnect()
+    this.rtcService.closeStream(this.localStream)
   }
 
   clientWs() {

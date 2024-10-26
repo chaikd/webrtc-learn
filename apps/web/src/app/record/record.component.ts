@@ -1,5 +1,5 @@
 import { RecordService } from './record.service';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { RtcService } from '../services/rtc.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { RtcService } from '../services/rtc.service';
   templateUrl: './record.component.html',
   styleUrls: ['./record.component.scss']
 })
-export class RecordComponent implements OnInit {
+export class RecordComponent implements OnInit, OnDestroy {
 
   localStream: any
   streamType: 'camera' | 'screen' = 'camera'
@@ -26,6 +26,10 @@ export class RecordComponent implements OnInit {
 
   ngOnInit(): void {
     this.getStream()
+  }
+
+  ngOnDestroy(): void {
+    this.rtcService.closeStream(this.localStream)
   }
 
   async getStream(streamType?: any) {
