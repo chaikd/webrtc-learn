@@ -1,29 +1,34 @@
-<div class="home absolute top-10 left-10 cursor-pointer text-white text-2xl" [routerLink]="['/']" routerLinkActive="router-link-active" >Home</div>
-<div class="bg-blue-500 w-screen h-screen flex justify-around items-center">
-    <div *ngIf="isRecording!=='over'" class="record-box relative">
-        <video class="w-full bg-black" #video [srcObject]="localStream" autoplay></video>
-        <div class="bottom-action absolute bottom-0 w-full flex justify-around items-center">
-            <div *ngIf="isRecording==='inactive'" class="start p-1 cursor-pointer border-2 border-gray-500 hover:rounded-full" (click)="recordStart()">
-                <div class="inner h-full w-full rounded-1/2 bg-red-600"></div>
-            </div>
-            <div *ngIf="isRecording==='recording'" class="stop p-1 cursor-pointer border-2 border-gray-500 rounded-lg" (click)="recordStop()">
-                <div class="inner h-full w-full rounded-sm bg-red-600"></div>
-            </div>
-            <div *ngIf="isRecording==='inactive'">
-                <button class="t-btn" *ngIf="streamType==='screen'"(click)="getStream('camera')">设置为摄像头录制</button>
-                <button class="t-btn" *ngIf="streamType==='camera'" (click)="getStream('screen')">设置为屏幕录制</button>
-            </div>
-        </div>
+<div class="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-4xl">
+      <div class="flex justify-between items-center mb-4">
+        <button routerLink="/" class="text-blue-500 hover:text-blue-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+        </button>
+        <h1 class="text-2xl font-bold text-gray-800">Video Recorder</h1>
+      </div>
+  
+      <video *ngIf="isRecording!=='over'" #video [srcObject]="localStream" autoplay class="w-full h-96 bg-black mb-4 rounded-lg"></video>
+      <video *ngIf="isRecording==='over'" class="w-full h-96 bg-black mb-4 rounded-lg" #player [src]="localStream" (play)="onPlay()" (pause)="onPause()" (ended)="onPause()"></video>
+      
+      <div *ngIf="isRecording!=='over'" class="flex justify-center space-x-4 items-center">
+        <span>{{isRecording === 'recording' ? '录制中' : ''}}</span>
+        <button *ngIf="isRecording==='inactive'" (click)="getStream(streamType === 'screen' ? 'camera' : 'screen')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            {{ streamType==='screen' ? '摄像头录制' : '屏幕录制' }}
+        </button>
+        <button (click)="isRecording ==='inactive' ? recordStart() : recordStop()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            {{ isRecording ==='inactive' ? '开始' : '结束' }}
+        </button>
+      </div>
+      <div *ngIf="isRecording==='over'" class="flex justify-center space-x-4">
+        <button (click)="reRecord()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            重新录制
+        </button>
+        <button (click)="playing ? playStop() : play()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            {{ !playing ? '播放' : '暂停' }}
+        </button>
+        <button [ngClass]="{'bg-gray-500': downloading}" (click)="download()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">下载</button>
+      </div>
     </div>
-    <div *ngIf="isRecording==='over'" class="record-box player-box relative">
-        <video class="w-full" #player [src]="localStream" (play)="onPlay()" (pause)="onPause()" (ended)="onPause()"></video>
-        <div class="bottom-action absolute bottom-0 w-full flex justify-around items-center">
-            <button class="t-btn mr-2" (click)="reRecord()">重新录制</button>
-            <div class="play-btn p-1 bg-white rounded-full cursor-pointer">
-                <img *ngIf="!playing" class="w-full h-full" src="/assets/images/play.png" alt="" (click)="play()">
-                <img *ngIf="playing" class="w-full h-full" src="/assets/images/pause.png" alt="" (click)="playStop()">
-            </div>
-            <button class="t-btn" [ngClass]="{'bg-gray-500': downloading}" (click)="download()">下载</button>
-        </div>
-    </div>
-</div>
+  </div>

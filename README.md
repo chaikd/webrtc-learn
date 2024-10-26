@@ -1,4 +1,9 @@
-
+Node Version:
+- v16.20.2
+Nx Version:
+- Local: v13.1.3
+Npm Version:
+- v8.19.4
 
 # Webrtc
 

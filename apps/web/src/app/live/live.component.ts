@@ -141,7 +141,7 @@ export class LiveComponent implements OnInit, OnDestroy {
     }
     user.peerconnection = await this.createPeerConnection(this.localStream, user)
     this.userList.push(user)
-    if(this.isMeeting) {
+    if(this._isMeeting) {
       this.connectPeer(user)
     }
     // this.setMeetingState()
@@ -196,16 +196,22 @@ export class LiveComponent implements OnInit, OnDestroy {
     this.send({
       type: 'leave'
     })
-    if (this.localStream) {
-      this.stopAllTrack()
-    }
+    // if (this.localStream) {
+    //   this.stopAllTrack()
+    // }
     this._isMeeting = false
   }
 
-  setupAllPeerConnection(stream: any) {
-    this.userList.forEach(async (user: any) => {
-      if (user.socketId === this.currentUser.socketId) return
-      user.peerconnection = await this.createPeerConnection(stream, user)
+  async setupAllPeerConnection(stream: any) {
+    return new Promise((resolve, reject) => {
+      this.userList.forEach(async (user: User, key: number) => {
+        if (user.socketId === this.currentUser.socketId) return
+        user.peerconnection = await this.createPeerConnection(stream, user)
+        if (key === this.userList.length - 1) {
+          console.log('this.userList.length: ', this.userList.length);
+          resolve(true)
+        }
+      })
     })
   }
 
@@ -259,41 +265,41 @@ export class LiveComponent implements OnInit, OnDestroy {
     this.changeTrack()
   }
 
-  changeTrack(cb?: any) {
-    this.userList.forEach((user: any) => {
+  changeTrack(cb?: any, isShare = false) {
+    this.userList.forEach(async(user: any, key: number) => {
       const peerconnection = user.peerconnection
-      if (peerconnection && peerconnection.iceConnectionState === 'connected') {
-        peerconnection.removeTrack(peerconnection.getSenders()[0])
-        for (const track of this.localStream.getTracks()) {
-          peerconnection.addTrack(track, this.localStream);
+      if (isShare || peerconnection?.iceConnectionState === 'connected') {
+        await this.setupAllPeerConnection(this.localStream)
+        await this.connectPeer(user)
+      }
+      if (key === this.userList.length - 1) {
+        if(cb) {
+          cb()
         }
-        peerconnection.createOffer().then((offer: any) => {
-          this.send({
-            type: 'offer',
-            offer,
-            touser: user.username,
-            socketId: user.socketId
-          })
-          peerconnection.setLocalDescription(offer)
-        })
       }
     })
-    if(cb) {
-      cb()
-    }
   }
 
   async shareScreen() {
     this.rtcService.getVideoStream('display')?.then(async (stream: any) => {
+      stream.oninactive = () => {
+        this.leave()
+        this.openCam()
+      }
       if (this.vType === 'camera' && this.localStream) {
         this.stopAllTrack()
+      }
+      if (this._isMeeting) {
+        this._isMeeting = false
       }
       this.vType = 'display'
       if (!this.isMute) {
         stream = await this.rtcService.addAudioStream(stream)
       }
       this.localStream = stream
-      this.changeTrack()
+      this.changeTrack(() => {
+        this._isMeeting = true
+      }, true)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -342,7 +348,7 @@ export class LiveComponent implements OnInit, OnDestroy {
   }
 
   connectPeer(touser: any) {
-    touser.peerconnection.createOffer().then((offer: any) => {
+    return touser.peerconnection?.createOffer().then((offer: any) => {
       this.send({
         type: 'offer',
         offer,

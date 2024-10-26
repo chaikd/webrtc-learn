@@ -43,7 +43,8 @@ export class RecordComponent implements OnInit {
         this.video.nativeElement.muted = true
       })
       this.streamType = streamType ? streamType : this.streamType
-    } if ((streamType || this.streamType) === 'screen') {
+    }
+    if ((streamType || this.streamType) === 'screen') {
       let audioStream, screenStream, error
       try {
         audioStream = await this.rtcService.getUserMedia({audio: true})
@@ -98,7 +99,7 @@ export class RecordComponent implements OnInit {
     const a = document.createElement('a');
     a.href = this.player.nativeElement.src;
     a.style.display = 'none';
-    a.download = 'local.mp4';
+    a.download = 'local.webm';
     a.click();
     this.downloading = false;
   }
